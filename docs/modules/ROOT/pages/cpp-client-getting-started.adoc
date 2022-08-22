@@ -88,6 +88,7 @@ Then, You can include the library and start a client using the following code:
 
 int main() {
     auto hz = hazelcast::new_client().get();
+    std::cout << "Hazelcast client started and connected to Hazelcast cluster successfully" << std::endl;
     return 0;
 }
 ----
