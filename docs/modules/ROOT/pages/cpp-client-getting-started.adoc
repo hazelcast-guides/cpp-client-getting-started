@@ -1,0 +1,203 @@
+= Getting Started with the Hazelcast C++ Client
+:page-layout: tutorial
+:page-product: platform
+:page-categories: Caching, Getting Started
+:page-lang: cplus
+:page-est-time: 5-10 mins
+:description: This tutorial will get you started with the Hazelcast C++ client.
+
+== What You'll Learn
+
+{description}
+
+== Before you Begin
+
+* A text editor or IDE
+* Docker
+* C++ 11+
+* Vcpkg
+
+== Start a Hazelcast Member
+
+We will use the 5.1 version of Hazelcast for this tutorial.
+
+In this tutorial, we will use Docker for simplicity. You can also use https://docs.hazelcast.com/hazelcast/5.1/getting-started/get-started-cli[CLI], https://docs.hazelcast.com/hazelcast/5.1/getting-started/get-started-binary[Binary] and https://docs.hazelcast.com/hazelcast/5.1/getting-started/get-started-java[Maven].
+
+[source,bash]
+----
+docker run -p 5701:5701 hazelcast/hazelcast:5.1
+----
+
+This will start a new Hazelcast member at port 5701. Now, we have a Hazelcast cluster with just one member.
+
+== Install Hazelcast C++ Client
+In this tutorial we will use Vcpkg for installing the C++ client. You can also use https://github.com/hazelcast/hazelcast-cpp-client/blob/master/Reference_Manual.md#111-conan-users[Conan] or install from source using CMake as explained https://github.com/hazelcast/hazelcast-cpp-client/blob/master/Reference_Manual.md#113-install-from-source-code-using-cmake[here].
+
+Before starting download and install Vcpkg itself if you haven't already:
+[source,bash]
+----
+git clone https://github.com/microsoft/vcpkg
+.\vcpkg\bootstrap-vcpkg.bat
+----
+
+First, execute the following to install `hazelcast-cpp-client` ith its `boost` dependencies:
+
+[source,bash]
+----
+.\vcpkg\vcpkg install hazelcast-cpp-client
+----
+After the installation, the library is available for usage.
+For example, if you are using CMake for your builds, you can use the following cmake build command with the `CMAKE_TOOLCHAIN_FILE` cmake option to be the `vcpkg.cmake`.
+
+[source,bash]
+----
+cmake -B [build directory] -S . -DCMAKE_TOOLCHAIN_FILE=[path to vcpkg]/scripts/buildsystems/vcpkg.cmake
+cmake --build [build directory]
+----
+For more information about Vcpkg installation check https://github.com/hazelcast/hazelcast-cpp-client/blob/master/Reference_Manual.md#112-vcpkg-users[here].
+
+== Starting the C++ Client
+In this tutorial we use CMake for compilation, for other options you can check https://github.com/hazelcast/hazelcast-cpp-client/blob/master/Reference_Manual.md#13-compiling-your-project[here].
+If you are using CMake like we do, you can easily find and link against the client library:
+[source]
+----
+find_package(hazelcast-cpp-client CONFIG REQUIRED)
+
+target_link_libraries(mytarget PRIVATE hazelcast-cpp-client::hazelcast-cpp-client)
+----
+Make sure you add the installation prefix of the client library to CMAKE_PREFIX_PATH if you are using a custom installation location.
+
+Then, You can include the library and start a client using the following code:
+[source,cpp]
+----
+#include <hazelcast/client/hazelcast_client.h>
+
+int main() {
+    auto hz = hazelcast::new_client().get();
+}
+----
+
+The following line creates and starts a new Hazelcast C++ client with the default configuration.
+
+[source,cpp]
+----
+auto hz = hazelcast::new_client().get();
+----
+
+The client automatically connects to the Hazelcast member available on the local machine.
+
+== Use Map
+
+A Hazelcast map is a distributed key-value store, similar to JavaScript Map class or plain objects. You can store key-value pairs in a map.
+In the following example, we will work with map entries where the keys are session ids and the values are emails.
+
+[source,cpp]
+----
+#include <hazelcast/client/hazelcast_client.h>
+
+int main() {
+    auto hz = hazelcast::new_client().get();
+    auto map = hz.get_map("some_map").get();
+    map->put<std::string,std::string>("sid12345","example1@email.com");
+    map->put<std::string,std::string>("sid12346","example2@email.com");
+    std::cout << map->get<std::string,std::string>("sid12345").get() << std::endl;
+    std::cout << map->get<std::string,std::string>("sid12346").get() << std::endl;
+}
+----
+
+The output of this snippet is given below:
+
+[source,bash]
+----
+example1@email.com
+example2@email.com
+----
+
+The following line returns a map proxy object for the 'some_map' map:
+
+[source,cpp]
+----
+auto map = hz.get_map("some_map").get();
+----
+
+If the map called “some_map” does not exist in the Hazelcast cluster, it will be automatically created. All the clients that connect to the same cluster will have access to the same map.
+
+With these two lines, the C++ client adds data to the map. The first parameter is the key of the entry, the second one is the value:
+
+[source,cpp]
+----
+map->put<std::string,std::string>("sid12345","example1@email.com");
+map->put<std::string,std::string>("sid12346","example2@email.com");
+----
+
+Finally, we get the values we added to the map with the get method:
+
+[source,cpp]
+----
+std::cout << map->get<std::string,std::string>("sid12345").get() << std::endl;
+std::cout << map->get<std::string,std::string>("sid12346").get() << std::endl;
+----
+
+== Add a Listener to the Map
+
+You can add an entry listener using the “add_entry_listener” method available on map proxy object.
+This will allow you to listen to certain events that happen in the map across the cluster.
+
+The first argument to the “add_entry_listener” method is an object that is used to define listeners.
+In this example, we registered listeners for the “on_added”, “on_removed" and “on_updated” events.
+
+The second argument in the add_entry_listener method is include_value. It is a boolean parameter, and if it is true, the entry event contains the entry value.
+In this example, it will be true.
+
+[source,cpp]
+----
+#include <hazelcast/client/hazelcast_client.h>
+
+int main(){
+    auto client = hazelcast::new_client().get();
+    auto map = client.get_map("some_map").get();
+
+    map->add_entry_listener(
+            hazelcast::client::entry_listener().on_added([](hazelcast::client::entry_event &&event) {
+                std::cout << "Entry added. Key:" << event.get_key().get<std::string>() << " Value: " << event.get_value().get<std::string>() << std::endl;
+            }).on_removed([](hazelcast::client::entry_event &&event) {
+                std::cout << "Entry removed. Key: " << event.get_key().get<std::string>() << std::endl;
+            }).on_updated([](hazelcast::client::entry_event &&event) {
+                std::cout << "Entry updated. Key: " << event.get_key().get<std::string>() << " Value change: "  << event.get_old_value().get<std::string>() << " -> " << event.get_value().get<std::string>() <<  std::endl;
+            }), true).get();
+
+    map->clear().get();
+
+    map->put<std::string,std::string>("sid12345", "example1@email.com").get();
+    map->put<std::string,std::string>("sid12346", "example2@email.com").get();
+    map->delete_entry("sid12345").get();
+    map->put<std::string,std::string>("sid12346", "example1@email.com").get();
+}
+----
+
+First, the map is cleared to fire events even if there are some entries in the map. Then, two session entries are added, and they are logged.
+After that, we remove one of the entries and update the other one. Then, we log the session entries again.
+
+The output is as follows:
+
+[source,bash]
+----
+Entry added. Key: sid12345 Value: example1@email.com
+Entry added. Key: sid12346 Value: example2@email.com
+Entry removed. Key: sid12345
+Entry updated. Key: sid12346 Value change: example2@email.com -> example1@email.com
+----
+
+
+
+== Summary
+
+In this tutorial, you learned how to get started with Hazelcast C++ Client using a distributed map.
+
+== See Also
+
+There are a lot of things that you can do with the C++ client. For more, such as how you can query a map with predicates,
+check out our https://github.com/hazelcast/hazelcast-cpp-client[client repository.]
+
+If you have any questions, suggestions, or feedback please do not hesitate to reach out to us via https://slack.hazelcast.com/[Hazelcast Community Slack.]
+Also, please take a look at https://github.com/hazelcast/hazelcast-cpp-client/issues[the issue list] if you would like to contribute to the client.
