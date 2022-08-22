@@ -156,13 +156,13 @@ std::cout << map->get<std::string,std::string>("sid12346").get() << std::endl;
 
 == Add a Listener to the Map
 
-You can add an entry listener using the “add_entry_listener” method available on map proxy object.
+You can add an entry listener using the `add_entry_listener` method available on map proxy object.
 This will allow you to listen to certain events that happen in the map across the cluster.
 
-The first argument to the “add_entry_listener” method is an object that is used to define listeners.
-In this example, we registered listeners for the “on_added”, “on_removed" and “on_updated” events.
+The first argument to the `add_entry_listener` method is an object that is used to define listeners.
+In this example, we registered listeners for the `on_added`, `on_removed` and `on_updated` events.
 
-The second argument in the add_entry_listener method is include_value. It is a boolean parameter, and if it is true, the entry event contains the entry value.
+The second argument in the add_entry_listener method is `include_value`. It is a boolean parameter, and if it is true, the entry event contains the entry value.
 In this example, it will be true.
 
 [source,cpp]
