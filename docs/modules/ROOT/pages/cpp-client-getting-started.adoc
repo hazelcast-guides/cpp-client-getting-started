@@ -14,7 +14,7 @@
 
 * A text editor or IDE
 * Docker
-* C++ 11+
+* C++ 11+  supporting compiler
 * Vcpkg
 
 == Start a Hazelcast Member
@@ -33,19 +33,33 @@ This will start a new Hazelcast member at port 5701. Now, we have a Hazelcast cl
 == Install Hazelcast C++ Client
 In this tutorial we will use Vcpkg for installing the C++ client. You can also use https://github.com/hazelcast/hazelcast-cpp-client/blob/master/Reference_Manual.md#111-conan-users[Conan] or install from source using CMake as explained https://github.com/hazelcast/hazelcast-cpp-client/blob/master/Reference_Manual.md#113-install-from-source-code-using-cmake[here].
 
-Before starting download and install Vcpkg itself if you haven't already:
+
+Before starting download and install Vcpkg itself if you haven't already: +
+for Windows;
 [source,bash]
 ----
 git clone https://github.com/microsoft/vcpkg
 .\vcpkg\bootstrap-vcpkg.bat
 ----
 
-First, execute the following to install `hazelcast-cpp-client` ith its `boost` dependencies:
-
+for non-Windows;
 [source,bash]
 ----
-.\vcpkg\vcpkg install hazelcast-cpp-client
+git clone https://github.com/microsoft/vcpkg
+./vcpkg/bootstrap-vcpkg.sh
 ----
+First, execute the following to install `hazelcast-cpp-client` with its `boost` dependency: +
+for Windows;
+[source,bash]
+----
+.\vcpkg\vcpkg.exe install hazelcast-cpp-client
+----
+for non-Windows;
+[source,bash]
+----
+./vcpkg/vcpkg install hazelcast-cpp-client
+----
+
 After the installation, the library is available for usage.
 For example, if you are using CMake for your builds, you can use the following cmake build command with the `CMAKE_TOOLCHAIN_FILE` cmake option to be the `vcpkg.cmake`.
 
@@ -74,6 +88,7 @@ Then, You can include the library and start a client using the following code:
 
 int main() {
     auto hz = hazelcast::new_client().get();
+    return 0;
 }
 ----
 
@@ -84,7 +99,7 @@ The following line creates and starts a new Hazelcast C++ client with the defaul
 auto hz = hazelcast::new_client().get();
 ----
 
-The client automatically connects to the Hazelcast member available on the local machine.
+The client automatically connects to the Hazelcast member available on the local machine. Client also automatically disconnects upon its destruction.
 
 == Use Map
 
