@@ -15,6 +15,7 @@
 
 * C++ 11 or above
 * https://hazelcast.com/products/viridian/[Hazelcast Viridian Cloud Account]
+* https://github.com/hazelcast/hazelcast-cpp-client#vcpkg-users[`vcpkg` & Hazelcast C++ client]
 * A text editor or IDE
 
 == Start a Hazelcast Viridian Cloud Cluster
@@ -35,35 +36,6 @@ mkdir hazelcast-cpp-example
 cd hazelcast-cpp-example
 ----
 
-Download and install Vcpkg: +
-
-for Windows;
-[source,bash]
-----
-git clone https://github.com/microsoft/vcpkg
-.\vcpkg\bootstrap-vcpkg.bat
-----
-
-for non-Windows;
-[source,bash]
-----
-git clone https://github.com/microsoft/vcpkg
-./vcpkg/bootstrap-vcpkg.sh
-----
-
-Download and install hazelcast-cpp-client: +
-
-for Windows;
-[source,bash]
-----
-.\vcpkg\vcpkg.exe install "hazelcast-cpp-client[openssl]" --recurse
-----
-
-for non-Windows;
-[source,bash]
-----
-./vcpkg/vcpkg install "hazelcast-cpp-client[openssl]" --recurse
-----
 
 NOTE: Avoid directory names in your path that contain spaces or other non-standard characters.
 
