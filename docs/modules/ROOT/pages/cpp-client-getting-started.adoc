@@ -1,11 +1,11 @@
-= Getting Started with the Hazelcast C++ Client
+= Getting Started with the Hazelcast {cpp} Client
 :page-layout: tutorial
 :page-product: platform
 :page-categories: Get Started
 :page-lang: cplus
 :page-enterprise:
 :page-est-time: 5-10 mins
-:description: This tutorial will get you started with the Hazelcast C++ client and manipulate a map.
+:description: This tutorial will get you started with the Hazelcast {cpp} client and manipulate a map.
 
 == What You'll Learn
 
@@ -13,7 +13,7 @@
 
 == Before you Begin
 
-* C++ 11 or above
+* {cpp} 11 or above
 * https://hazelcast.com/products/viridian/[Hazelcast Viridian Cloud Account]
 * A text editor or IDE
 
@@ -105,11 +105,11 @@ key.pem
 vcpkg
 ----
 
-== Understanding the C++ Client
+== Understanding the {cpp} Client
 
 The following section creates and starts a Hazelcast client with default configuration, connects to your Viridian cluster before shutting the client down at the end.
 
-Create a C++ file named “example.cpp” and put the following code inside it:
+Create a {cpp} file named “example.cpp” and put the following code inside it:
 
 [source,cpp]
 ----
@@ -176,7 +176,7 @@ Once complete, run the example:
 For more information about Vcpkg installation check https://github.com/hazelcast/hazelcast-cpp-client/blob/master/Reference_Manual.md#112-vcpkg-users[here].
 In this tutorial we use CMake for compilation, for other options you can check https://github.com/hazelcast/hazelcast-cpp-client/blob/master/Reference_Manual.md#13-compiling-your-project[here].
 
-To understand and use the client, review the https://hazelcast.github.io/hazelcast-cpp-client/api-index.html[C++ API documentation] to better understand what is possible.
+To understand and use the client, review the https://hazelcast.github.io/hazelcast-cpp-client/api-index.html[{cpp} API documentation] to better understand what is possible.
 
 == Understanding the Hazelcast SQL API
 
@@ -407,12 +407,12 @@ NOTE: Ordering of the keys is NOT enforced and results may NOT correspond to ins
 
 == Summary
 
-In this tutorial, you learned how to get started with the Hazelcast C++ Client, connect to a Viridian instance and put data into a distributed map.
+In this tutorial, you learned how to get started with the Hazelcast {cpp} Client, connect to a Viridian instance and put data into a distributed map.
 
 == See Also
 
-There are a lot of things that you can do with the C++ Client. For more, such as how you can query a map with predicates and SQL,
-check out our https://github.com/hazelcast/hazelcast-cpp-client[C++ Client repository] and our https://hazelcast.github.io/hazelcast-cpp-client/api-index.html[C++ API documentation] to better understand what is possible.
+There are a lot of things that you can do with the {cpp} Client. For more, such as how you can query a map with predicates and SQL,
+check out our https://hazelcast.github.io/hazelcast-cpp-client/api-index.html[{cpp} API documentation] and our https://hazelcast.github.io/hazelcast-cpp-client/api-index.html[{cpp} API documentation] to better understand what is possible.
 
 If you have any questions, suggestions, or feedback please do not hesitate to reach out to us via https://slack.hazelcast.com/[Hazelcast Community Slack].
 Also, please take a look at https://github.com/hazelcast/hazelcast-cpp-client/issues[the issue list] if you would like to contribute to the client.
