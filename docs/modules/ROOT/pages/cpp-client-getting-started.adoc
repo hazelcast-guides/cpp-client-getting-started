@@ -412,7 +412,7 @@ In this tutorial, you learned how to get started with the Hazelcast {cpp} Client
 == See Also
 
 There are a lot of things that you can do with the {cpp} Client. For more, such as how you can query a map with predicates and SQL,
-check out our https://hazelcast.github.io/hazelcast-cpp-client/api-index.html[{cpp} API documentation] and our https://hazelcast.github.io/hazelcast-cpp-client/api-index.html[{cpp} API documentation] to better understand what is possible.
+check out our https://github.com/hazelcast/hazelcast-cpp-client[{cpp} Client repository] and our https://hazelcast.github.io/hazelcast-cpp-client/api-index.html[{cpp} API documentation] to better understand what is possible.
 
 If you have any questions, suggestions, or feedback please do not hesitate to reach out to us via https://slack.hazelcast.com/[Hazelcast Community Slack].
 Also, please take a look at https://github.com/hazelcast/hazelcast-cpp-client/issues[the issue list] if you would like to contribute to the client.
